@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndexApp", "IndexApp\IndexApp.csproj", "{A134AB37-D44D-46B6-9503-86F2583BB543}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A134AB37-D44D-46B6-9503-86F2583BB543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A134AB37-D44D-46B6-9503-86F2583BB543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A134AB37-D44D-46B6-9503-86F2583BB543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A134AB37-D44D-46B6-9503-86F2583BB543}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0807D344-8385-4DA4-B90C-D481C623E50C}
+	EndGlobalSection
+EndGlobal
