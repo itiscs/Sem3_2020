@@ -8,9 +8,6 @@ namespace Equation
 {
 
     
-
-
-
     class Program
     {
         static void Main(string[] args)
