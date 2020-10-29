@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FirstWebApplication.Models;
+using FirstWebApplication.Services;
 
 namespace FirstWebApplication.Controllers
 {
+
     public class PhonesController : Controller
     {
+        PhonesService serv = new PhonesService();
         private readonly PhonesContext _context;
 
         public PhonesController(PhonesContext context)
@@ -21,8 +24,9 @@ namespace FirstWebApplication.Controllers
         // GET: Phones
         public async Task<IActionResult> Index()
         {
-            
-            return View(await _context.Phones.ToListAsync());
+            var phones = serv.GetPhones();
+            return View(phones);
+            //return View(await _context.Phones.ToListAsync());
         }
 
         // GET: Phones/Details/5
@@ -33,8 +37,9 @@ namespace FirstWebApplication.Controllers
                 return NotFound();
             }
 
-            var phone = await _context.Phones
-                .FirstOrDefaultAsync(m => m.IdPhone == id);
+            //var phone = await _context.Phones
+            //    .FirstOrDefaultAsync(m => m.IdPhone == id);
+            var phone = serv.GetPhone(Convert.ToInt32(id)); 
             if (phone == null)
             {
                 return NotFound();
@@ -54,6 +59,7 @@ namespace FirstWebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Create([Bind("IdPhone,Brand,Model,Price,Image")] Phone phone)
         {
             if (ModelState.IsValid)
