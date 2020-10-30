@@ -43,16 +43,17 @@ namespace FirstWebApplication.Services
 
         }
 
-        public Phone GetPhone(int i)
+        public Phone GetPhone(int id)
         {
-            var cmd = new SqlCommand("Select * from Phones where IdPhone = " + i.ToString()
+            var cmd = new SqlCommand("Select * from Phones where IdPhone = " + id.ToString()
                 , con);
 
             con.Open();
             var rdr = cmd.ExecuteReader();
-            var phone = new Phone();
+            Phone phone = null;
             while (rdr.Read())
             {
+                phone = new Phone();
                 phone.IdPhone = rdr.GetInt32(0);
                 phone.Brand = rdr[1].ToString();
                 phone.Model = rdr[2].ToString();
@@ -62,6 +63,47 @@ namespace FirstWebApplication.Services
             }
             con.Close();
             return phone;
+        }
+
+        public void AddPhone(Phone ph)
+        {
+            var cmd = new SqlCommand("insert into Phones(Brand,Model,Price,Count,Image) "
+                + "values(@Brand,@Model,@Price,@Count,@Image)", con);
+            cmd.Parameters.AddWithValue("@Brand", ph.Brand);
+            cmd.Parameters.AddWithValue("@Model", ph.Model);
+            cmd.Parameters.AddWithValue("@Price", ph.Price);
+            cmd.Parameters.AddWithValue("@Count", ph.Count);
+            cmd.Parameters.AddWithValue("@Image", ph.Image);
+
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public void UpdatePhone(Phone ph)
+        {
+            var cmd = new SqlCommand("Update Phones set Brand=@Brand, Model=@Model, " +
+                "Price=@Price, Count=@Count, Image=@Image where IdPhone=@id", con);
+            cmd.Parameters.AddWithValue("@Brand", ph.Brand);
+            cmd.Parameters.AddWithValue("@Model", ph.Model);
+            cmd.Parameters.AddWithValue("@Price", ph.Price);
+            cmd.Parameters.AddWithValue("@Count", ph.Count);
+            cmd.Parameters.AddWithValue("@Image", ph.Image);
+            cmd.Parameters.AddWithValue("@id", ph.IdPhone);
+
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+
+        public void DeletePhone(int id)
+        {
+            var cmd = new SqlCommand("delete from Phones where IdPhone = @id", con);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
         }
 
 

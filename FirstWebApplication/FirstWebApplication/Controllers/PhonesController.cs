@@ -13,7 +13,7 @@ namespace FirstWebApplication.Controllers
 
     public class PhonesController : Controller
     {
-        PhonesService serv = new PhonesService();
+        private PhonesService serv = new PhonesService();
         private readonly PhonesContext _context;
 
         public PhonesController(PhonesContext context)
@@ -60,12 +60,13 @@ namespace FirstWebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         
-        public async Task<IActionResult> Create([Bind("IdPhone,Brand,Model,Price,Image")] Phone phone)
+        public async Task<IActionResult> Create([Bind("Brand,Model,Price,Image")] Phone phone)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(phone);
-                await _context.SaveChangesAsync();
+                serv.AddPhone(phone);
+                //_context.Add(phone);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(phone);
@@ -79,7 +80,8 @@ namespace FirstWebApplication.Controllers
                 return NotFound();
             }
 
-            var phone = await _context.Phones.FindAsync(id);
+            //var phone = await _context.Phones.FindAsync(id);
+            var phone = serv.GetPhone(Convert.ToInt32(id));
             if (phone == null)
             {
                 return NotFound();
@@ -103,8 +105,9 @@ namespace FirstWebApplication.Controllers
             {
                 try
                 {
-                    _context.Update(phone);
-                    await _context.SaveChangesAsync();
+                    //_context.Update(phone);
+                    //await _context.SaveChangesAsync();
+                    serv.UpdatePhone(phone);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -130,8 +133,9 @@ namespace FirstWebApplication.Controllers
                 return NotFound();
             }
 
-            var phone = await _context.Phones
-                .FirstOrDefaultAsync(m => m.IdPhone == id);
+            //var phone = await _context.Phones
+            //    .FirstOrDefaultAsync(m => m.IdPhone == id);
+            var phone = serv.GetPhone(Convert.ToInt32(id));
             if (phone == null)
             {
                 return NotFound();
@@ -145,9 +149,11 @@ namespace FirstWebApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var phone = await _context.Phones.FindAsync(id);
-            _context.Phones.Remove(phone);
-            await _context.SaveChangesAsync();
+            //var phone = await _context.Phones.FindAsync(id);
+            //_context.Phones.Remove(phone);
+            //await _context.SaveChangesAsync();
+
+            serv.DeletePhone(id);
             return RedirectToAction(nameof(Index));
         }
 
