@@ -1,4 +1,5 @@
 ﻿using FirstWebApplication.Models;
+using FirstWebApplication.Data;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FirstWebApplication.Services
 {
-    public class PhonesService
+    public class PhonesService:IGenericRepository<Phone>
     {
         SqlConnection con = new SqlConnection();
         
@@ -19,7 +20,7 @@ namespace FirstWebApplication.Services
             con.ConnectionString = str;
         }
 
-        public List<Phone> GetPhones()
+        public IEnumerable<Phone> GetAll()
         {
             var cmd = new SqlCommand("Select * from Phones", con);
 
@@ -43,7 +44,7 @@ namespace FirstWebApplication.Services
 
         }
 
-        public Phone GetPhone(int id)
+        public Phone GetById(int id)
         {
             var cmd = new SqlCommand("Select * from Phones where IdPhone = " + id.ToString()
                 , con);
@@ -65,7 +66,7 @@ namespace FirstWebApplication.Services
             return phone;
         }
 
-        public void AddPhone(Phone ph)
+        public void Add(Phone ph)
         {
             var cmd = new SqlCommand("insert into Phones(Brand,Model,Price,Count,Image) "
                 + "values(@Brand,@Model,@Price,@Count,@Image)", con);
@@ -79,7 +80,7 @@ namespace FirstWebApplication.Services
             cmd.ExecuteNonQuery();
             con.Close();
         }
-        public void UpdatePhone(Phone ph)
+        public void Update(Phone ph)
         {
             var cmd = new SqlCommand("Update Phones set Brand=@Brand, Model=@Model, " +
                 "Price=@Price, Count=@Count, Image=@Image where IdPhone=@id", con);
@@ -96,10 +97,10 @@ namespace FirstWebApplication.Services
         }
 
 
-        public void DeletePhone(int id)
+        public void Remove(Phone phone)
         {
             var cmd = new SqlCommand("delete from Phones where IdPhone = @id", con);
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", phone.IdPhone);
 
             con.Open();
             cmd.ExecuteNonQuery();

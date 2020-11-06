@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FirstWebApplication.Models;
+using FirstWebApplication.Data;
+using FirstWebApplication.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +31,12 @@ namespace FirstWebApplication
 
             services.AddDbContext<PhonesContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("PhonesConnection")));
+
+            services.AddScoped<PhonesService>();
+
+            //services.AddTransient<IGenericRepository<Phone>,GenericRepository<Phone>>();
+            services.AddTransient<IGenericRepository<Phone>, PhonesService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

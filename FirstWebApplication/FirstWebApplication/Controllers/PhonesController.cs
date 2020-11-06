@@ -7,24 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FirstWebApplication.Models;
 using FirstWebApplication.Services;
+using FirstWebApplication.Data;
 
 namespace FirstWebApplication.Controllers
 {
 
     public class PhonesController : Controller
     {
-        private PhonesService serv = new PhonesService();
-        private readonly PhonesContext _context;
+        //private PhonesService _serv;// = new PhonesService();
+        //private readonly PhonesContext _context;
+        private readonly IGenericRepository<Phone> _repos;
 
-        public PhonesController(PhonesContext context)
+        public PhonesController(IGenericRepository<Phone> repos)
         {
-            _context = context;
+            _repos = repos; 
         }
+
+        //public PhonesController(PhonesContext context, PhonesService serv)
+        //{
+        //    _context = context;
+        //    _serv = serv;
+        //}
 
         // GET: Phones
         public async Task<IActionResult> Index()
         {
-            var phones = serv.GetPhones();
+            var phones = _repos.GetAll();
             return View(phones);
             //return View(await _context.Phones.ToListAsync());
         }
@@ -39,7 +47,7 @@ namespace FirstWebApplication.Controllers
 
             //var phone = await _context.Phones
             //    .FirstOrDefaultAsync(m => m.IdPhone == id);
-            var phone = serv.GetPhone(Convert.ToInt32(id)); 
+            var phone = _repos.GetById(Convert.ToInt32(id)); 
             if (phone == null)
             {
                 return NotFound();
@@ -64,7 +72,7 @@ namespace FirstWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                serv.AddPhone(phone);
+                _repos.Add(phone);
                 //_context.Add(phone);
                 //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -81,7 +89,7 @@ namespace FirstWebApplication.Controllers
             }
 
             //var phone = await _context.Phones.FindAsync(id);
-            var phone = serv.GetPhone(Convert.ToInt32(id));
+            var phone = _repos.GetById(Convert.ToInt32(id));
             if (phone == null)
             {
                 return NotFound();
@@ -107,7 +115,7 @@ namespace FirstWebApplication.Controllers
                 {
                     //_context.Update(phone);
                     //await _context.SaveChangesAsync();
-                    serv.UpdatePhone(phone);
+                    _repos.Update(phone);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -135,7 +143,7 @@ namespace FirstWebApplication.Controllers
 
             //var phone = await _context.Phones
             //    .FirstOrDefaultAsync(m => m.IdPhone == id);
-            var phone = serv.GetPhone(Convert.ToInt32(id));
+            var phone = _repos.GetById(Convert.ToInt32(id));
             if (phone == null)
             {
                 return NotFound();
@@ -153,13 +161,14 @@ namespace FirstWebApplication.Controllers
             //_context.Phones.Remove(phone);
             //await _context.SaveChangesAsync();
 
-            serv.DeletePhone(id);
+            var phone = _repos.GetById(id);
+            _repos.Remove(phone);
             return RedirectToAction(nameof(Index));
         }
 
         private bool PhoneExists(int id)
         {
-            return _context.Phones.Any(e => e.IdPhone == id);
+            return _repos.GetAll().Any(e => e.IdPhone == id);
         }
     }
 }
