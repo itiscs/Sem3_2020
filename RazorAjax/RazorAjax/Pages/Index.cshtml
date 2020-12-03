@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h4>Categories</h4>
+<select asp-for="CategoryId" asp-items="Model.Categories">
+    <!-->option value="">Select Category</!--option-->
+</select>
+<h4>SubCategories</h4>
+<select asp-for="SubCategoryId">
+    
+</select>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#CategoryId").on("change", function() {
+                var categoryId = $(this).val();
+                $("#SubCategoryId").empty();
+               // $("#SubCategoryId").append("<option value=''>Select SubCategory</option>");
+                $.getJSON(`?handler=SubCategories&categoryId=${categoryId}`, (data) => {
+                    $.each(data, function (i, item) {
+                        $("#SubCategoryId").append(`<option value="${item.subCategoryId}">${item.subCategoryName}</option>`);
+                    });
+                });
+            });
+        });
+    </script>
+}

@@ -14,6 +14,9 @@ namespace FirstWebApplication.Models
         }
 
         public DbSet<Phone> Phones { get; set; }
-        
+
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderLine> OrderLines { get; set; }
+
     }
 }
